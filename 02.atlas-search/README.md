@@ -56,7 +56,7 @@ Atlas Console 의 Aggregation 항목을 선택 하고 검색 관련한 pipeline 
 Python Flask project 를 다운로드 후 config.py 에 MongoDB를 접근하기 위한 Connection String을 입력 합니다.    
 
 `````
-mongo_uri="mongodb+srv://altas-account:<password>@cluster0.****.mongodb.net/myFirstDatabase"
+mongo_uri="mongodb+srv://altas-account:<password>@cluster0.****.mongodb.net/"
 `````
 
 필요한 패키를 설치 합니다.

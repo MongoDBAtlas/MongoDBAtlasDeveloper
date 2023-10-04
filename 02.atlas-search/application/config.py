@@ -1,0 +1,1 @@
+mongo_uri="mongodb+srv://altas-account:<password>@cluster0.****.mongodb.net/"
