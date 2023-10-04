@@ -13,22 +13,22 @@ MongoDB atlas Search를 이용하여 Data pipeline 구성 없이 Atlas에 저장
 #### full text index 생성
 Atlas console 에 로그인 후 데이터베이스 클러스터를 선택 후 Search를 클릭 합니다.   
 Free tier는 3개의 인덱스 까지 생성 가능 합니다.   
-<img src="/02.atlas-search/images/images01.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images01.png" width="70%" height="70%">    
 
 인덱스 생성은 Json 으로 직접 입력 하거나 UI를 통해 생성 할 수 있습니다.  Visual Editor 를 선택 합니다.
-<img src="/02.atlas-search/images/images02.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images02.png" width="70%" height="70%">    
 
 컬렉션은 sample_mflix.movies 를 선택 하고 인덱스 이름은 default로 합니다.
-<img src="/02.atlas-search/images/images03.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images03.png" width="70%" height="70%">    
 
 인덱스 생성은 백그라운드에서 실행 되며 몇분후에 완료 됩니다.
-<img src="/02.atlas-search/images/images04.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images04.png" width="70%" height="70%">    
 
 
 #### 기본 Full text Search
 Atlas Console 의 Aggregation 항목을 선택 하고 검색 관련한 pipeline 을 다음과 같이 생성 하여 줍니다.
 
-<img src="/02.atlas-search/images/images05.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images05.png" width="70%" height="70%">    
 
 검색을 위한 파이프라인을 구성 합니다. fullplot이라는 컬럼을 대상으로 crime을 검색 합니다.
 `````
@@ -45,11 +45,11 @@ Atlas Console 의 Aggregation 항목을 선택 하고 검색 관련한 pipeline 
 ]
 `````
 
-<img src="/02.atlas-search/images/images06.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images06.png" width="70%" height="70%">    
 
 쿼리가 실행 되어 결과가 보여 지게 됩니다. 해당 필드에 해당 검색어로 검색한 결과로 보여 집니다.
 
-<img src="/02.atlas-search/images/images07.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images07.png" width="70%" height="70%">    
 
 
 #### Flask Application
@@ -82,7 +82,7 @@ $ pip3 install flask
 `````
 
 애플리케이션에 접속 합니다.    
-<img src="/02.atlas-search/images/images08.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images08.png" width="70%" height="70%">    
 
 
 #### 일반 텍스트 검색
@@ -94,7 +94,7 @@ Server.py 의 20 라인에 다음을 확인 합니다.
 queries 폴더에 query01.json을 이용한 텍스트 검색으로 movies 컬렉션에 title 컬럼에서 갬색을 진행 합니다. 결과는 3개 항목 만을 기준으로 하며 검색 Score를 함께 보여 줍니다.    
 
 다음은 crime으로 검색한 결과 입니다.     
-<img src="/02.atlas-search/images/images09.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images09.png" width="70%" height="70%">    
 
 두개 이상의 단어를 입력하여 검색을 하기 위해 Server.py 의 20 라인을 다음과 같이 변경합니다.
 `````
@@ -102,7 +102,7 @@ queries 폴더에 query01.json을 이용한 텍스트 검색으로 movies 컬렉
 `````
 
 fullplot 항목에서 입력한 키워드로 검색한 합니다. (total recall 로 검색한 결과) 결과는 전체 검색 결괄르 리턴 합니다.     
-<img src="/02.atlas-search/images/images10.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images10.png" width="70%" height="70%">    
 
 
 #### 문장 검색
@@ -110,7 +110,7 @@ Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결�
 `````
     with open("queries/query06.json", "r", encoding = 'utf-8') as query_file:
 `````
-<img src="/02.atlas-search/images/images11.png" width="50%" height="50%">    
+<img src="/02.atlas-search/image/images11.png" width="50%" height="50%">    
 
 #### Fuzzy 검색
 두개의 단어 new york 을 검색 하는 경우 관련된 영화를 볼 수 있습니다. 사용자가 오타를 입력한 경우 즉 nrw yprk 로 검색을 하면 아무런 결과가 나오지 않습니다. 오타를 인지 하고 처리 해주기 위해 Query 를 변경합니다.    
@@ -118,7 +118,7 @@ Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결�
 `````
     with open("queries/query09.json", "r", encoding = 'utf-8') as query_file:
 `````
-<img src="/02.atlas-search/images/images12.png" width="50%" height="50%">    
+<img src="/02.atlas-search/image/images12.png" width="50%" height="50%">    
 
 
 #### 검색어 완성
@@ -142,7 +142,7 @@ Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결�
   }
 }
 `````
-<img src="/02.atlas-search/images/images13.png" width="50%" height="50%">
+<img src="/02.atlas-search/image/images13.png" width="50%" height="50%">
 
 index.html 파일에 다음 내용을 수정 하여 줍니다. (212 라인) 기존 function() {} 을 findMovieTitles() 로 변경 합니다.   
 
@@ -158,4 +158,4 @@ $('#custom-search-input .typeahead').typeahead({
 `````
 검색어로 scar 를 입력 하면 scar를 포함한 추천 검색어가 보여 집니다.
 
-<img src="/02.atlas-search/images/images14.png" width="50%" height="50%">
+<img src="/02.atlas-search/image/images14.png" width="50%" height="50%">
