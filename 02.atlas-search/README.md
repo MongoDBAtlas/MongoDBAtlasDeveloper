@@ -6,6 +6,7 @@
 ### [&rarr; Index 생성 및 테스트](#Index)
 ### [&rarr; Flask Application](#Application)
 ### [&rarr; Search in Aggregate](#Aggregate)
+### [&rarr; Vector Search](#Vector)
 
 <br>
 
@@ -85,8 +86,9 @@ $ pip3 install flask
 
 `````
 
-애플리케이션에 접속 합니다.    
-<img src="/02.atlas-search/image/images08.png" width="70%" height="70%">    
+애플리케이션에 접속 합니다.  (http://localhost:5010/)   
+
+<img src="/02.atlas-search/image/images08.png" width="80%" height="80%">    
 
 
 #### 일반 텍스트 검색
@@ -97,24 +99,124 @@ Server.py 의 20 라인에 다음을 확인 합니다.
 
 queries 폴더에 query01.json을 이용한 텍스트 검색으로 movies 컬렉션에 title 컬럼에서 갬색을 진행 합니다. 결과는 3개 항목 만을 기준으로 하며 검색 Score를 함께 보여 줍니다.    
 
-다음은 crime으로 검색한 결과 입니다.     
+다음은 "crime"으로 검색한 결과 입니다. (한단어로 검색 하기)       
 <img src="/02.atlas-search/image/images09.png" width="70%" height="70%">    
 
-두개 이상의 단어를 입력하여 검색을 하기 위해 Server.py 의 20 라인을 다음과 같이 변경합니다.
+사용한 Query는 다음과 같습니다. (queries/query01.json)  
+path 가 "title" 이며 검색 단어(!!queryParameter!!)를 받아 검색을 진행 합니다.     
+`````
+[
+    {
+      "$search": {
+        "index": "default",
+        "text": {
+          "query": "!!queryParameter!!",
+          "path": "title"
+        }
+      }
+    },
+    {
+			"$limit" : 3
+		},
+		{
+      "$project": {
+        "_id" : 0,
+        "poster" : 1,
+        "year" : 1,
+        "imdb.rating" : 1,
+        "runtime" : 1,
+        "fullplot" : 1,
+        "title" : 1,
+        "cast" : 1,
+        "score": { "$meta": "searchScore" }
+      }
+    }
+]
+`````
+
+
+두개 이상의 단어를 입력하여 줄거리에서 검색을 진행 합니다.
+진행을 위해 Server.py 의 20 라인을 다음과 같이 변경합니다.
 `````
     with open("queries/query02.json", "r", encoding = 'utf-8') as query_file:
 `````
 
-fullplot 항목에서 입력한 키워드로 검색한 합니다. (total recall 로 검색한 결과) 결과는 전체 검색 결괄르 리턴 합니다.     
-<img src="/02.atlas-search/image/images10.png" width="70%" height="70%">    
+fullplot 항목에서 입력한 키워드로 검색한 합니다. (total recall 로 검색한 결과) 결과는 전체 검색 결과를 리턴 합니다.    
+스페이스 구분된 두개의 단어("total","recall")가 각각 검색이 되어 나온 것을 확인 할 수 있습니다. (검색 결과가 10개로 total과 recall을 모두 포함하는 영화가 높은 스코어로 상위에 나오지며 하위에 Grindhouse 등 한단어만 포함하는 영화가 나오는 것을 확인 할 수 있습니다.)    
+<img src="/02.atlas-search/image/images21.png" width="80%" height="80%">    
 
+사용한 Query는 다음과 같습니다. (queries/query02.json)  
+path 가 "title","fullplot","plot" 이며 검색 단어(!!queryParameter!!)를 받아 검색을 진행 합니다.     
+`````
+[
+    {
+      "$search": {
+        "index": "default",
+        "text": {
+          "query": "!!queryParameter!!",
+          "path": ["title","fullplot","plot"]
+        }
+      }
+    },
+    {
+			"$limit" : 10
+		},
+		{
+      "$project": {
+        "_id" : 0,
+        "poster" : 1,
+        "year" : 1,
+        "imdb.rating" : 1,
+        "runtime" : 1,
+        "fullplot" : 1,
+        "title" : 1,
+        "cast" : 1,
+        "score": { "$meta": "searchScore" }
+      }
+    }
+]
+`````
 
 #### 문장 검색
-Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결과가 보여 지게 됩니다. 이를 한 단어로 하여 검색 합니다.    
+total recall로 검색을 하면 total과 recall 으로 검색 한 결과가 보여 진것을 확인 하였습니다. 이를 하나의 단어(문장)으로 인식하고 검색을 진행 합니다.   
+"total recall"이 포함된 영화를 검색하여 그 결과가 2개만 있는 것을 확인 할 수 있습니다.   
 `````
     with open("queries/query06.json", "r", encoding = 'utf-8') as query_file:
 `````
-<img src="/02.atlas-search/image/images11.png" width="50%" height="50%">    
+<img src="/02.atlas-search/image/images22.png" width="80%" height="80%">    
+
+사용한 Query는 다음과 같습니다. (queries/query06.json)  
+path 가 "title","fullplot","plot" 이나 검색이 "phrase"로 검색 단어(!!queryParameter!!)가 포함된 영화를 검색 합니다.     
+`````
+[
+    {
+      "$search": {
+        "index": "default",
+        "phrase": {
+          "query": "!!queryParameter!!",
+          "path": ["title","fullplot","plot"],
+					"slop" : 0
+        }
+      }
+    },
+    {
+      "$limit" : 10
+    },
+    {
+      "$project": {
+        "_id" : 0,
+        "poster" : 1,
+        "year" : 1,
+        "imdb.rating" : 1,
+        "runtime" : 1,
+        "fullplot" : 1,
+        "title" : 1,
+        "cast" : 1,
+        "score": { "$meta": "searchScore" }
+      }
+    }
+]
+`````
 
 #### Fuzzy 검색
 두개의 단어 new york 을 검색 하는 경우 관련된 영화를 볼 수 있습니다. 사용자가 오타를 입력한 경우 즉 nrw yprk 로 검색을 하면 아무런 결과가 나오지 않습니다. 오타를 인지 하고 처리 해주기 위해 Query 를 변경합니다.    
@@ -124,6 +226,40 @@ Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결�
 `````
 <img src="/02.atlas-search/image/images12.png" width="50%" height="50%">    
 
+사용한 Query는 다음과 같습니다. (queries/query09.json)  
+path 가 "title"로 입력한 단어를 검색 하며 fuzzy 설정에 따라 1개의 오타를 허용 하여 검색 합니다.     
+`````
+[
+    {
+      "$search": {
+        "text": {
+          "path": "title",
+          "query": "!!queryParameter!!",
+          "fuzzy": {
+            "maxEdits": 1,
+            "maxExpansions": 100
+          }
+        }
+      }
+    },
+    {
+      "$limit" : 10
+    },
+    {
+      "$project": {
+        "_id" : 0,
+        "poster" : 1,
+        "year" : 1,
+        "imdb.rating" : 1,
+        "runtime" : 1,
+        "fullplot" : 1,
+        "title" : 1,
+        "cast" : 1,
+        "score": { "$meta": "searchScore" }
+      }
+    }
+]
+`````
 
 #### 검색어 완성
 영화 제목 검색시 자동으로 관련된 단어를 보여 줍니다. 검색 키 입력된 내용에 따라 자동으로 해당 단어로 시작하는 단어를 보여 주게 됩니다. 이를 위해 인덱스를 변경 해 줍니다.  다음 인덱스를 생성 하여 줍니다. 인덱스 이름은 title_autocomplete 로 하여 줍니다.    
@@ -169,76 +305,208 @@ $('#custom-search-input .typeahead').typeahead({
 Application을 사용하지 않고 직접 mongosh을 이용하여 Query를 작성하여 실행하는 것입니다. 테스트를 위해 Mongosh을 설치 하거나 Compass을 실행 하여 줍니다.
 
 #### 일반 텍스트 검색
-Server.py 의 20 라인에 다음을 확인 합니다. 
+
+title 컬럼을 대상으로 하여 "crime"을 검색 한 것으로 aggregate pipeline으로 검색이 가능 합니다.   
+
 `````
-    with open("queries/query01.json", "r", encoding = 'utf-8') as query_file:
+[primary] sample_mflix> let query="crime"
+
+[primary] sample_mflix> let search = {
+...       "$search": {
+...         "index": "default",
+...         "text": {
+...           "query": query,
+...           "path": "title"
+...         }
+...       }
+...     }
+
+[primary] sample_mflix> let projection = {
+...       "$project": {
+...         "_id" : 0,
+...         "poster" : 1,
+...         "year" : 1,
+...         "imdb.rating" : 1,
+...         "runtime" : 1,
+...         "fullplot" : 1,
+...         "title" : 1,
+...         "cast" : 1,
+...         "score": { "$meta": "searchScore" }
+...       }
+...     }
+
+[primary] sample_mflix> db.movies.aggregate([search,projection, limit])
+[
+  {
+    runtime: 98,
+    cast: [
+      'Terence Hill',
+      'Bud Spencer',
+      'David Huddleston',
+      'Luciano Catenacci'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BN2Q5MThlZTgtMWMyMi00NDIwLWE1NTMtNzFlOGRmM2QxMGY0XkEyXkFqcGdeQXVyNzc5MjA3OA@@._V1_SY1000_SX677_AL_.jpg',
+    title: 'Crime Busters',
+    fullplot: "Through an improbable series of events and an impossibly bungled supermarket hold-up, down on their luck con men Matt and Wilbur find themselves working with the Miami police force. As they patrol the streets of the city, their main job becomes trying to break the hold of the city's street gangs, including one group of teens in old movie-gangster style clothes, 
+    ...
 `````
 
-queries 폴더에 query01.json을 이용한 텍스트 검색으로 movies 컬렉션에 title 컬럼에서 갬색을 진행 합니다. 결과는 3개 항목 만을 기준으로 하며 검색 Score를 함께 보여 줍니다.    
+두개 이상의 단어를 입력하여 제목, 줄거리에서 검색을 진행 합니다.
 
-다음은 crime으로 검색한 결과 입니다.     
-<img src="/02.atlas-search/image/images09.png" width="70%" height="70%">    
-
-두개 이상의 단어를 입력하여 검색을 하기 위해 Server.py 의 20 라인을 다음과 같이 변경합니다.
 `````
-    with open("queries/query02.json", "r", encoding = 'utf-8') as query_file:
+[primary] sample_mflix> let query="total recall"
+
+[primary] sample_mflix> let search = { "$search": { "index": "default", "text": { "query": query, "path": ["title", "fullplot", "plot"] } } }
+
+[primary] sample_mflix> let projection = { "$project": { "_id": 0, "poster": 1, "year": 1, "imdb.rating": 1, "runtime": 1, "fullplot": 1, "title": 1, "cast": 1, "score": { "$meta": "searchScore" } } }
+
+[primary] sample_mflix> let limit = {"$limit":10}
+
+[primary] sample_mflix> db.movies.aggregate([search,projection, limit])
+[
+  {
+    runtime: 113,
+    cast: [
+      'Arnold Schwarzenegger',
+      'Rachel Ticotin',
+      'Sharon Stone',
+      'Ronny Cox'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BYzU1YmJjMGEtMjY4Yy00MTFlLWE3NTUtNzI3YjkwZTMxZjZmXkEyXkFqcGdeQXVyNDc2NjEyMw@@._V1_SY1000_SX677_AL_.jpg',
+    title: 'Total Recall',
+    fullplot: "Douglas Quaid is haunted by a recurring dream about a journey to Mars. He hopes to find out more about this dream and buys a holiday at Rekall Inc. where they sell implanted memories. But something goes wrong with the memory implantation and he remembers being a secret agent fighting against the evil Mars administrator Cohaagen. Now the story really begins and it's a rollercoaster ride until the massive end of the movie.",
+    year: 1990,
+    imdb: { rating: 7.5 },
+    score: 9.212348937988281
+  },
+  {
+    runtime: 118,
+    cast: [
+      'Colin Farrell',
+      'Kate Beckinsale',
+      'Jessica Biel',
+      'Bryan Cranston'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BN2ZiMDMzYWItNDllZC00ZmRmLWI1YzktM2M5M2ZmZDg1OGNlXkEyXkFqcGdeQXVyNDQ2MTMzODA@._V1_SY1000_SX677_AL_.jpg',
+    title: 'Total Recall',
+    year: 2012,
+    imdb: { rating: 6.3 },
+    score: 9.212348937988281
+  },
+  {
+    fullplot: `Six unemployed steel workers, inspired by the Chippendale's dancers, form a male striptease act. The women cheer them on to go for "the full monty" - total nudity.`,
+    imdb: { rating: 7.2 },
+    year: 1997,
+    title: 'The Full Monty',
+    poster: 'https://m.media-amazon.com/images/M/MV5BODg0NWFjMTAtNGZjMC00NmZlLThhZDYtM2MzNTU2NDZiZDVmXkEyXkFqcGdeQXVyMDUyOTUyNQ@@._V1_SY1000_SX677_AL_.jpg',
+    cast: [ 'Robert Carlyle', 'Mark Addy', 'William Snape', 'Steve Huison' ],
+    runtime: 91,
+    score: 7.376830101013184
+  },
+..
 `````
 
-fullplot 항목에서 입력한 키워드로 검색한 합니다. (total recall 로 검색한 결과) 결과는 전체 검색 결괄르 리턴 합니다.     
-<img src="/02.atlas-search/image/images10.png" width="70%" height="70%">    
+3번째로 검색된 영화 "The Full Monty"를 보면 줄거리 부분에 "total nudity"로 인해 total이 검색된 것으로 2개 단어 중 하나만 검색되어도 결과로 나오는 것을 확인 할 수 있습니다. 
 
 
 #### 문장 검색
-Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결과가 보여 지게 됩니다. 이를 한 단어로 하여 검색 합니다.    
+total recall로 검색을 하면 total과 recall 으로 검색 한 결과가 보여 진것을 확인 하였습니다. 이를 하나의 단어(문장)으로 인식하고 검색을 진행 합니다.   
+"total recall"이 포함된 영화를 검색하여 그 결과가 2개만 있는 것을 확인 할 수 있습니다.   
 `````
-    with open("queries/query06.json", "r", encoding = 'utf-8') as query_file:
+[primary] sample_mflix> let query="total recall"
+
+[primary] sample_mflix> let search = { "$search": { "index": "default", "phrase": { "query": query, "path": ["title", "fullplot", "plot"], "slop": 0 } } }
+
+[primary] sample_mflix> let projection = { "$project": { "_id": 0, "poster": 1, "year": 1, "imdb.rating": 1, "runtime": 1, "fullplot": 1, "title": 1, "cast": 1, "score": { "$meta": "searchScore" } } }
+
+[primary] sample_mflix> let limit = {"$limit":10}
+
+[primary] sample_mflix> db.movies.aggregate([search,projection, limit])
+[
+  {
+    runtime: 113,
+    cast: [
+      'Arnold Schwarzenegger',
+      'Rachel Ticotin',
+      'Sharon Stone',
+      'Ronny Cox'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BYzU1YmJjMGEtMjY4Yy00MTFlLWE3NTUtNzI3YjkwZTMxZjZmXkEyXkFqcGdeQXVyNDc2NjEyMw@@._V1_SY1000_SX677_AL_.jpg',
+    title: 'Total Recall',
+    fullplot: "Douglas Quaid is haunted by a recurring dream about a journey to Mars. He hopes to find out more about this dream and buys a holiday at Rekall Inc. where they sell implanted memories. But something goes wrong with the memory implantation and he remembers being a secret agent fighting against the evil Mars administrator Cohaagen. Now the story really begins and it's a rollercoaster ride until the massive end of the movie.",
+    year: 1990,
+    imdb: { rating: 7.5 },
+    score: 9.212348937988281
+  },
+  {
+    runtime: 118,
+    cast: [
+      'Colin Farrell',
+      'Kate Beckinsale',
+      'Jessica Biel',
+      'Bryan Cranston'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BN2ZiMDMzYWItNDllZC00ZmRmLWI1YzktM2M5M2ZmZDg1OGNlXkEyXkFqcGdeQXVyNDQ2MTMzODA@._V1_SY1000_SX677_AL_.jpg',
+    title: 'Total Recall',
+    year: 2012,
+    imdb: { rating: 6.3 },
+    score: 9.212348937988281
+  }
+]
 `````
-<img src="/02.atlas-search/image/images11.png" width="50%" height="50%">    
 
 #### Fuzzy 검색
 두개의 단어 new york 을 검색 하는 경우 관련된 영화를 볼 수 있습니다. 사용자가 오타를 입력한 경우 즉 nrw yprk 로 검색을 하면 아무런 결과가 나오지 않습니다. 오타를 인지 하고 처리 해주기 위해 Query 를 변경합니다.    
    
 `````
-    with open("queries/query09.json", "r", encoding = 'utf-8') as query_file:
+[primary] sample_mflix> let query="naw yark"
+
+[primary] sample_mflix> let search = { "$search": { "text": { "path": "title", "query": query, "fuzzy": { "maxEdits": 1, "maxExpansions": 100 } } } }
+
+[primary] sample_mflix> let projection = { "$project": { "_id": 0, "poster": 1, "year": 1, "imdb.rating": 1, "runtime": 1, "fullplot": 1, "title": 1, "cast": 1, "score": { "$meta": "searchScore" } } }
+
+[primary] sample_mflix> let limit = {"$limit":10}
+
+Atlas atlas-txdmjn-shard-0 [primary] sample_mflix> db.movies.aggregate([search,projection, limit])
+[
+  {
+    runtime: 155,
+    cast: [
+      'Liza Minnelli',
+      'Robert De Niro',
+      'Lionel Stander',
+      'Barry Primus'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BYzZjM2RlZWMtZjVhNC00ODAyLTg0MDEtZDNmNjU4ODg2YjY3XkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_SY1000_SX677_AL_.jpg',
+    title: 'New York, New York',
+    fullplot: 'The day WWII ends, Jimmy, a selfish and smooth-talking musician, meets Francine, a lounge singer. From that moment on, their relationship grows into love as they struggle with their careers and aim for the top.',
+    year: 1977,
+    imdb: { rating: 6.7 },
+    score: 4.38106107711792
+  },
+  {
+    runtime: 153,
+    cast: [
+      'John Abraham',
+      'Neil Nitin Mukesh',
+      'Katrina Kaif',
+      'Irrfan Khan'
+    ],
+    poster: 'https://m.media-amazon.com/images/M/MV5BYTljMjMyYjEtZjRlNi00MGE5LTk5MDQtYzAyYTc3ODJiN2M2XkEyXkFqcGdeQXVyNTkzNDQ4ODc@._V1_SY1000_SX677_AL_.jpg',
+    title: 'New York',
+    fullplot: "After being apprehended, detained, humiliated, and denied legal counsel by the Federal Bureau of Investigation, Omar Ehzaz, originally from Delhi's Lajpatnagar, relates to the investigator, Roshan, assigned to his case, how he arrived in New York during 1999; his friendship with Samir Shaikh and Student Counselor, Maya; the events of September 11, 2001; the subsequent paranoia, fear, racial profiling, generated and aggravated by the tyrannical right-winged regime of George W. Bush, and how he came to be in possession of several Ak47s and plastic explosives that were confiscated from his taxi-cab.",
+    year: 2009,
+    imdb: { rating: 6.7 },
+    score: 4.040346145629883
+  },
+
 `````
-<img src="/02.atlas-search/image/images12.png" width="50%" height="50%">    
+path 가 "title"로 입력한 단어를 검색 하며 fuzzy 설정에 따라 1개의 오타를 허용 하여 검색 합니다.     
 
 
-#### 검색어 완성
-영화 제목 검색시 자동으로 관련된 단어를 보여 줍니다. 검색 키 입력된 내용에 따라 자동으로 해당 단어로 시작하는 단어를 보여 주게 됩니다. 이를 위해 인덱스를 변경 해 줍니다.  다음 인덱스를 생성 하여 줍니다. 인덱스 이름은 title_autocomplete 로 하여 줍니다.    
-   
-`````
-{
-  "mappings": {
-    "dynamic": false,
-    "fields": {
-      "title": [
-        {
-          "type": "autocomplete",
-          "tokenization": "edgeGram",
-          "minGrams": 3,
-          "maxGrams": 7,
-          "foldDiacritics": false
-        }
-      ]
-    }
-  }
-}
-`````
-<img src="/02.atlas-search/image/images13.png" width="50%" height="50%">
+### Vector
+영화에 대해 단어를 이용한 검색이 아닌 문장으로 의미를 작성하여 검색을 진행 합니다. embedded_movies 컬렉션에 사전에 OpenAI 의 "ada-002-text"를 이용하여 vector data를 생성 한 것입니다.
 
-index.html 파일에 다음 내용을 수정 하여 줍니다. (212 라인) 기존 function() {} 을 findMovieTitles() 로 변경 합니다.   
+인덱스 생성
 
-`````
-$('#custom-search-input .typeahead').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 3
-    },
-    {
-        source: findMovieTitles ()
-    });
-`````
-검색어로 scar 를 입력 하면 scar를 포함한 추천 검색어가 보여 집니다.
-
-<img src="/02.atlas-search/image/images14.png" width="50%" height="50%">
+퀄리 실행

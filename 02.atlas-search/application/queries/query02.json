@@ -4,12 +4,12 @@
         "index": "default",
         "text": {
           "query": "!!queryParameter!!",
-          "path": "fullplot"
+          "path": ["title","fullplot","plot"]
         }
       }
     },
     {
-			"$limit" : 15
+			"$limit" : 10
 		},
 		{
       "$project": {
