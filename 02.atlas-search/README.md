@@ -56,7 +56,7 @@ Atlas Console 의 Aggregation 항목을 선택 하고 검색 관련한 pipeline 
 
 <img src="/02.atlas-search/image/images07.png" width="70%" height="70%">    
 
-### Index
+### Application
 Python을 설치 한 후 application 폴더에 Flask project를 다운로드 후 config.py 에 MongoDB를 접근하기 위한 Connection String을 입력 합니다.    
 
 `````
