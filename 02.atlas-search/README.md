@@ -3,12 +3,13 @@
 
 # MongoDB Atlas Training for Developers
 
-### [&rarr; Full Text Search](#Search)
+### [&rarr; Index 생성 및 테스트](#Index)
 ### [&rarr; Flask Application](#Application)
+### [&rarr; Search in Aggregate](#Aggregate)
 
 <br>
 
-### Search
+### Index
 MongoDB Atlas Search를 이용하여 Data pipeline 구성 없이 Atlas에 저장된 데이터에 대해 full text 검색을 수행 합니다.
 
 #### full text index 생성
@@ -55,9 +56,8 @@ Atlas Console 의 Aggregation 항목을 선택 하고 검색 관련한 pipeline 
 
 <img src="/02.atlas-search/image/images07.png" width="70%" height="70%">    
 
-
-#### Flask Application
-Python Flask project 를 다운로드 후 config.py 에 MongoDB를 접근하기 위한 Connection String을 입력 합니다.    
+### Index
+Python을 설치 한 후 application 폴더에 Flask project를 다운로드 후 config.py 에 MongoDB를 접근하기 위한 Connection String을 입력 합니다.    
 
 `````
 mongo_uri="mongodb+srv://altas-account:<password>@cluster0.****.mongodb.net/"
@@ -88,6 +88,85 @@ $ pip3 install flask
 애플리케이션에 접속 합니다.    
 <img src="/02.atlas-search/image/images08.png" width="70%" height="70%">    
 
+
+#### 일반 텍스트 검색
+Server.py 의 20 라인에 다음을 확인 합니다. 
+`````
+    with open("queries/query01.json", "r", encoding = 'utf-8') as query_file:
+`````
+
+queries 폴더에 query01.json을 이용한 텍스트 검색으로 movies 컬렉션에 title 컬럼에서 갬색을 진행 합니다. 결과는 3개 항목 만을 기준으로 하며 검색 Score를 함께 보여 줍니다.    
+
+다음은 crime으로 검색한 결과 입니다.     
+<img src="/02.atlas-search/image/images09.png" width="70%" height="70%">    
+
+두개 이상의 단어를 입력하여 검색을 하기 위해 Server.py 의 20 라인을 다음과 같이 변경합니다.
+`````
+    with open("queries/query02.json", "r", encoding = 'utf-8') as query_file:
+`````
+
+fullplot 항목에서 입력한 키워드로 검색한 합니다. (total recall 로 검색한 결과) 결과는 전체 검색 결괄르 리턴 합니다.     
+<img src="/02.atlas-search/image/images10.png" width="70%" height="70%">    
+
+
+#### 문장 검색
+Jimmie Shannon으로 검색을 하면 Jimmie 와 Shannon 으로 검색 한 결과가 보여 지게 됩니다. 이를 한 단어로 하여 검색 합니다.    
+`````
+    with open("queries/query06.json", "r", encoding = 'utf-8') as query_file:
+`````
+<img src="/02.atlas-search/image/images11.png" width="50%" height="50%">    
+
+#### Fuzzy 검색
+두개의 단어 new york 을 검색 하는 경우 관련된 영화를 볼 수 있습니다. 사용자가 오타를 입력한 경우 즉 nrw yprk 로 검색을 하면 아무런 결과가 나오지 않습니다. 오타를 인지 하고 처리 해주기 위해 Query 를 변경합니다.    
+   
+`````
+    with open("queries/query09.json", "r", encoding = 'utf-8') as query_file:
+`````
+<img src="/02.atlas-search/image/images12.png" width="50%" height="50%">    
+
+
+#### 검색어 완성
+영화 제목 검색시 자동으로 관련된 단어를 보여 줍니다. 검색 키 입력된 내용에 따라 자동으로 해당 단어로 시작하는 단어를 보여 주게 됩니다. 이를 위해 인덱스를 변경 해 줍니다.  다음 인덱스를 생성 하여 줍니다. 인덱스 이름은 title_autocomplete 로 하여 줍니다.    
+   
+`````
+{
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "title": [
+        {
+          "type": "autocomplete",
+          "tokenization": "edgeGram",
+          "minGrams": 3,
+          "maxGrams": 7,
+          "foldDiacritics": false
+        }
+      ]
+    }
+  }
+}
+`````
+<img src="/02.atlas-search/image/images13.png" width="50%" height="50%">
+
+index.html 파일에 다음 내용을 수정 하여 줍니다. (212 라인) 기존 function() {} 을 findMovieTitles() 로 변경 합니다.   
+
+`````
+$('#custom-search-input .typeahead').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 3
+    },
+    {
+        source: findMovieTitles ()
+    });
+`````
+검색어로 scar 를 입력 하면 scar를 포함한 추천 검색어가 보여 집니다.
+
+<img src="/02.atlas-search/image/images14.png" width="50%" height="50%">
+
+
+### Aggregate
+Application을 사용하지 않고 직접 mongosh을 이용하여 Query를 작성하여 실행하는 것입니다. 테스트를 위해 Mongosh을 설치 하거나 Compass을 실행 하여 줍니다.
 
 #### 일반 텍스트 검색
 Server.py 의 20 라인에 다음을 확인 합니다. 
