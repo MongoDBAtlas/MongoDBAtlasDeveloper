@@ -12,7 +12,7 @@ app = Flask(__name__,
             static_folder='templates/static',)
 # conn = pymongo.MongoClient(mongo_uri, ssl_cert_reqs=ssl.CERT_NONE)
 conn = pymongo.MongoClient(mongo_uri)
-collection = conn['sample_mflix']['movies']
+collection = conn['sample_mflix']['embedded_movies']
 collection_airbnb = conn['sample_airbnb']['listingsAndReviews']
 # endpoint
 @app.route('/search', methods=['GET'])

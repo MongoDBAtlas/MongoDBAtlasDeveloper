@@ -4,24 +4,28 @@
 # MongoDB Atlas Training for Developers
 
 ### [&rarr; Full Text Search](#Search)
+### [&rarr; Flask Application](#Application)
 
 <br>
 
 ### Search
-MongoDB atlas Search를 이용하여 Data pipeline 구성 없이 Atlas에 저장된 데이터에 대해 full text 검색을 수행 합니다.
+MongoDB Atlas Search를 이용하여 Data pipeline 구성 없이 Atlas에 저장된 데이터에 대해 full text 검색을 수행 합니다.
 
 #### full text index 생성
 Atlas console 에 로그인 후 데이터베이스 클러스터를 선택 후 Search를 클릭 합니다.   
 Free tier는 3개의 인덱스 까지 생성 가능 합니다.   
 <img src="/02.atlas-search/image/images01.png" width="70%" height="70%">    
 
-인덱스 생성은 Json 으로 직접 입력 하거나 UI를 통해 생성 할 수 있습니다.  Visual Editor 를 선택 합니다.
+인덱스 생성은 Json 으로 직접 입력 하거나 UI를 통해 생성 할 수 있습니다. Visual Editor 를 선택 합니다.
 <img src="/02.atlas-search/image/images02.png" width="70%" height="70%">    
 
 컬렉션은 sample_mflix.movies 를 선택 하고 인덱스 이름은 default로 합니다.
-<img src="/02.atlas-search/image/images03.png" width="70%" height="70%">    
+<img src="/02.atlas-search/image/images03.png" width="70%" height="70%">  
 
-인덱스 생성은 백그라운드에서 실행 되며 몇분후에 완료 됩니다.
+Analyzer 등은 기본 설정인 standard로 선택 하며 Dynamic을 기본값인 On을 선택 합니다. (전체 기본값으로 하여 줍니다)   
+<img src="/02.atlas-search/image/images20.png" width="70%" height="70%">  
+
+Create Search Index를 클릭 하여 인덱스를 생성하여 줍니다. 작업은 백그라운드에서 실행 되며 몇분 후에 완료 됩니다.
 <img src="/02.atlas-search/image/images04.png" width="70%" height="70%">    
 
 
