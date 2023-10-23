@@ -246,7 +246,7 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 다음 데이터 베이스 명령으로 데이터를 생성 합니다.
 
 ````
-db.users.insert(
+db.user.insert(
   {
         ssn:"123-456-0001", 
         email:"user@email.com", 
@@ -274,7 +274,7 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 
 데이터를 조회 합니다
 ````
-db.users.find({ssn:"123-456-0001"});
+db.user.find({ssn:"123-456-0001"});
 
 [
   {
@@ -311,7 +311,7 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 수정할 데이터를 ssn을 입력 하여 줍니다.
 수정 대상 데이터의 ssn 및 수정할 데이터 항목을 확인 수정 하여 줍니다.
 `````
-db.users.updateOne(
+db.user.updateOne(
   {"ssn":"123-456-0001"},
    [
       { $set: { email: "gildong@email.com" } }
@@ -321,7 +321,7 @@ db.users.updateOne(
 
 데이터를 수정 결과를 확인 합니다. (이메일 주소가 수정 된 것을 확인 합니다)
 ````
-db.users.find({"ssn":"123-456-0001"});
+db.user.find({"ssn":"123-456-0001"});
 
 [
   {
@@ -358,7 +358,7 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 수정할 데이터를 ssn을 입력 하여 줍니다.
 수정 대상 데이터의 ssn 및 Hobby 항목을 추가 하여 줍니다. (취미로 Reading 추가 하기)
 `````
-db.users.updateOne(
+db.user.updateOne(
   {"ssn":"123-456-0001"},
    [
      { $push: { Hobbies:"Reading" } }
@@ -368,7 +368,7 @@ db.users.updateOne(
 
 데이터를 수정 결과를 확인 합니다. (Hobby에 Reading이 추가되어 있음)
 ````
-db.users.find({"ssn":"123-456-0001"});
+db.user.find({"ssn":"123-456-0001"});
 
 [
   {
@@ -406,7 +406,7 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 삭제할 데이터를 수정 하여 줍니다.
 삭제할 데이터의 ssn 및 입력 하여줍니다.
 `````
-db.users.deleteOne({ssn:"123-456-0001"});
+db.user.deleteOne({ssn:"123-456-0001"});
 
 { acknowledged: true, deletedCount: 1 }
 
@@ -414,7 +414,7 @@ db.users.deleteOne({ssn:"123-456-0001"});
 
 데이터를 확인 합니다.
 ````
-db.users.findOne({ssn:"123-456-0001"});
+db.user.findOne({ssn:"123-456-0001"});
 null
 ````
 
