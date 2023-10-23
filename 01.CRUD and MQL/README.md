@@ -681,136 +681,113 @@ application 의 aggregation.js 에 복사한 내용을 붙여 주기 합니다.
           ];
 ````
 
-코드를 다음과 같이 실행 하여 줍니다. 실행 전 필요한 모듈을 설치 하여 주고 실행 하여 줍니다.
-
-````
-application % npm install
-
-added 196 packages, and audited 197 packages in 2s
-
-14 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-kyudong.kim@Kyudongui-MacBookPro application % node aggregation.js 
-Aggregation Records : [object Object]
-kyudong.kim@Kyudongui-MacBookPro application % node aggregation.js
-ReferenceError: cursor is not defined
-    at run (/Users/kyudong.kim/works/group_git/MongoDBAtlasTraining/01.CRUD and MQL/application/aggregation.js:34:7)
-kyudong.kim@Kyudongui-MacBookPro application % node aggregation.js
-Error: querySrv ENOTFOUND _mongodb._tcp.***.***.mongodb.net
-    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:251:17) {
-  errno: undefined,
-  code: 'ENOTFOUND',
-  syscall: 'querySrv',
-  hostname: '_mongodb._tcp.***.***.mongodb.net'
-}
-application % node aggregation.js
-{ _id: 'Portugal', count: 14 }
-{ _id: 'Cameroon', count: 1 }
-{ _id: 'Iraq', count: 1 }
-{ _id: 'Italy', count: 477 }
-{ _id: 'Romania', count: 25 }
-{ _id: 'Germany', count: 442 }
-{ _id: 'Iceland', count: 19 }
-{ _id: 'Poland', count: 47 }
-{ _id: 'Canada', count: 348 }
-{ _id: 'Soviet Union', count: 39 }
-{ _id: 'Brazil', count: 48 }
-{ _id: 'UK', count: 696 }
-{ _id: 'East Germany', count: 1 }
-{ _id: 'Israel', count: 26 }
-{ _id: 'Zaire', count: 1 }
-{ _id: 'Cuba', count: 7 }
-{ _id: 'Yugoslavia', count: 8 }
-{ _id: 'Serbia and Montenegro', count: 5 }
-{ _id: 'Albania', count: 1 }
-{ _id: 'Japan', count: 171 }
-{ _id: 'Spain', count: 197 }
-{ _id: 'Czech Republic', count: 41 }
-{ _id: 'Ireland', count: 73 }
-{ _id: 'Sweden', count: 94 }
-{ _id: 'Malta', count: 1 }
-{ _id: 'Greece', count: 24 }
-{ _id: 'United Arab Emirates', count: 6 }
-{ _id: 'Serbia', count: 10 }
-{ _id: 'Puerto Rico', count: 3 }
-{ _id: 'Montenegro', count: 1 }
-{ _id: 'Palestine', count: 1 }
-{ _id: 'Liechtenstein', count: 1 }
-{ _id: 'West Germany', count: 47 }
-{ _id: 'Botswana', count: 2 }
-{ _id: 'Colombia', count: 2 }
-{ _id: 'Mexico', count: 62 }
-{ _id: 'Tajikistan', count: 1 }
-{ _id: "Cète d'Ivoire", count: 1 }
-{ _id: 'Kazakhstan', count: 1 }
-{ _id: 'Monaco', count: 1 }
-{ _id: 'Denmark', count: 84 }
-{ _id: 'Russia', count: 66 }
-{ _id: 'Turkey', count: 23 }
-{ _id: 'Latvia', count: 8 }
-{ _id: 'Uzbekistan', count: 2 }
-{ _id: 'Bolivia', count: 1 }
-{ _id: 'Panama', count: 1 }
-{ _id: 'Papua New Guinea', count: 1 }
-{ _id: 'Iran', count: 13 }
-{ _id: 'New Zealand', count: 29 }
-{ _id: 'Greenland', count: 1 }
-{ _id: 'Netherlands', count: 76 }
-{ _id: 'Bulgaria', count: 4 }
-{ _id: 'Croatia', count: 10 }
-{ _id: 'Faroe Islands', count: 1 }
-{ _id: 'Singapore', count: 6 }
-{ _id: 'Norway', count: 56 }
-{ _id: 'China', count: 50 }
-{ _id: 'Slovakia', count: 6 }
-{ _id: 'Armenia', count: 2 }
-{ _id: 'Luxembourg', count: 20 }
-{ _id: 'Austria', count: 33 }
-{ _id: 'Chile', count: 7 }
-{ _id: 'Indonesia', count: 2 }
-{ _id: 'Rwanda', count: 1 }
-{ _id: 'Angola', count: 1 }
-{ _id: 'Slovenia', count: 6 }
-{ _id: 'Jordan', count: 4 }
-{ _id: 'Taiwan', count: 28 }
-{ _id: 'Tunisia', count: 3 }
-{ _id: 'Lebanon', count: 5 }
-{ _id: 'Republic of Macedonia', count: 4 }
-{ _id: 'Hungary', count: 31 }
-{ _id: 'South Korea', count: 49 }
-{ _id: 'Belgium', count: 112 }
-{ _id: 'Uruguay', count: 6 }
+코드를 다음과 같이 실행 하여 줍니다. 
+kyle@M-FC637HK1H7 application % node aggregation.js 
 { _id: 'Finland', count: 104 }
-{ _id: 'Bosnia and Herzegovina', count: 2 }
-{ _id: 'Saudi Arabia', count: 1 }
-{ _id: 'North Korea', count: 1 }
-{ _id: 'Ukraine', count: 6 }
-{ _id: 'Algeria', count: 1 }
-{ _id: 'South Africa', count: 12 }
-{ _id: 'India', count: 199 }
-{ _id: 'Argentina', count: 54 }
-{ _id: 'Egypt', count: 4 }
-{ _id: 'Czechoslovakia', count: 21 }
-{ _id: 'Philippines', count: 10 }
-{ _id: 'Bhutan', count: 1 }
-{ _id: 'Thailand', count: 20 }
-{ _id: 'Federal Republic of Yugoslavia', count: 8 }
-{ _id: 'Estonia', count: 8 }
-{ _id: 'Peru', count: 1 }
-{ _id: 'Senegal', count: 3 }
-{ _id: 'Georgia', count: 3 }
-{ _id: 'Australia', count: 148 }
+{ _id: 'Austria', count: 33 }
+{ _id: 'Russia', count: 66 }
 { _id: 'Malaysia', count: 4 }
-{ _id: 'USA', count: 3843 }
-{ _id: 'Nigeria', count: 1 }
-{ _id: 'Lithuania', count: 2 }
-{ _id: 'Qatar', count: 1 }
+{ _id: 'Mexico', count: 62 }
+{ _id: 'Taiwan', count: 28 }
 { _id: 'Switzerland', count: 49 }
-{ _id: 'France', count: 793 }
-{ _id: 'Hong Kong', count: 117 }
+{ _id: 'Federal Republic of Yugoslavia', count: 8 }
+{ _id: 'Spain', count: 197 }
+{ _id: 'Rwanda', count: 1 }
+{ _id: 'Greenland', count: 1 }
+{ _id: 'Qatar', count: 1 }
+{ _id: 'Papua New Guinea', count: 1 }
+{ _id: 'Montenegro', count: 1 }
+{ _id: 'Estonia', count: 8 }
+{ _id: 'Greece', count: 24 }
+{ _id: 'Australia', count: 148 }
+{ _id: 'UK', count: 696 }
+{ _id: 'Bhutan', count: 1 }
+{ _id: 'Jordan', count: 4 }
+{ _id: 'Ukraine', count: 6 }
+{ _id: 'Colombia', count: 2 }
+{ _id: 'Zaire', count: 1 }
+{ _id: 'USA', count: 3843 }
+{ _id: 'Hungary', count: 31 }
+{ _id: 'Netherlands', count: 76 }
+{ _id: 'Japan', count: 171 }
+{ _id: 'Liechtenstein', count: 1 }
+{ _id: 'India', count: 199 }
+{ _id: 'Luxembourg', count: 20 }
+{ _id: 'Panama', count: 1 }
+{ _id: 'Slovakia', count: 6 }
+{ _id: 'United Arab Emirates', count: 6 }
+{ _id: 'Puerto Rico', count: 3 }
+{ _id: 'Tajikistan', count: 1 }
+{ _id: 'Norway', count: 56 }
+{ _id: 'Latvia', count: 8 }
+{ _id: 'Saudi Arabia', count: 1 }
+{ _id: 'Canada', count: 348 }
+{ _id: 'Senegal', count: 3 }
+{ _id: 'Bulgaria', count: 4 }
+{ _id: 'Singapore', count: 6 }
+{ _id: 'Nigeria', count: 1 }
+{ _id: 'Ireland', count: 73 }
+{ _id: 'Iraq', count: 1 }
+{ _id: 'Turkey', count: 23 }
+{ _id: 'West Germany', count: 47 }
 { _id: 'Kyrgyzstan', count: 1 }
+{ _id: 'Angola', count: 1 }
+{ _id: 'Croatia', count: 10 }
+{ _id: 'New Zealand', count: 29 }
+{ _id: 'Slovenia', count: 6 }
+{ _id: 'Georgia', count: 3 }
+{ _id: 'Serbia', count: 10 }
+{ _id: 'Palestine', count: 1 }
+{ _id: 'Denmark', count: 84 }
+{ _id: 'Soviet Union', count: 39 }
+{ _id: 'Hong Kong', count: 117 }
+{ _id: 'China', count: 50 }
+{ _id: 'Iceland', count: 19 }
+{ _id: 'France', count: 793 }
+{ _id: 'Armenia', count: 2 }
+{ _id: 'Bolivia', count: 1 }
+{ _id: 'Uruguay', count: 6 }
+{ _id: 'North Korea', count: 1 }
+{ _id: 'East Germany', count: 1 }
+{ _id: 'Republic of Macedonia', count: 4 }
+{ _id: 'Philippines', count: 10 }
+{ _id: 'Yugoslavia', count: 8 }
+{ _id: 'Cameroon', count: 1 }
+{ _id: 'Bosnia and Herzegovina', count: 2 }
+{ _id: 'Chile', count: 7 }
+{ _id: 'Thailand', count: 20 }
+{ _id: 'Peru', count: 1 }
+{ _id: 'Serbia and Montenegro', count: 5 }
+{ _id: 'Germany', count: 442 }
+{ _id: 'Argentina', count: 54 }
+{ _id: 'Poland', count: 47 }
+{ _id: 'Brazil', count: 48 }
+{ _id: 'Czech Republic', count: 41 }
+{ _id: 'Kazakhstan', count: 1 }
+{ _id: 'Romania', count: 25 }
+{ _id: 'Belgium', count: 112 }
+{ _id: 'Lebanon', count: 5 }
+{ _id: 'Albania', count: 1 }
+{ _id: 'South Africa', count: 12 }
+{ _id: 'Uzbekistan', count: 2 }
+{ _id: 'Faroe Islands', count: 1 }
+{ _id: 'Italy', count: 477 }
+{ _id: 'Cuba', count: 7 }
+{ _id: 'Malta', count: 1 }
+{ _id: 'Monaco', count: 1 }
+{ _id: 'Egypt', count: 4 }
+{ _id: "Cète d'Ivoire", count: 1 }
+{ _id: 'Tunisia', count: 3 }
+{ _id: 'Israel', count: 26 }
+{ _id: 'Botswana', count: 2 }
+{ _id: 'Portugal', count: 14 }
+{ _id: 'South Korea', count: 49 }
+{ _id: 'Indonesia', count: 2 }
+{ _id: 'Lithuania', count: 2 }
+{ _id: 'Czechoslovakia', count: 21 }
+{ _id: 'Iran', count: 13 }
+{ _id: 'Algeria', count: 1 }
+{ _id: 'Sweden', count: 94 }
 ````
 
 ### Lookup
