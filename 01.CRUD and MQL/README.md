@@ -139,8 +139,6 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 `````
       const query = {"ssn":"123-456-0001"};
       const updatedata ={$set:{email:"gildong@email.com"}};
-
-const result = await userCollection.updateOne(query, updatedata);
       
 `````
 
