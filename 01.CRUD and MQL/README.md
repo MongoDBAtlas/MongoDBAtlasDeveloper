@@ -257,6 +257,11 @@ db.user.insert(
         Phones:[{"type":"mobile","number":"010-5555-1234"}]
   }
 );
+
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId("653662c14771f95974766b8d") }
+}
 ````
 Atlas Console 에서 데이터 생성 여부를 확인 합니다.
 
@@ -368,10 +373,16 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 `````
 db.user.updateOne(
   {"ssn":"123-456-0001"},
-   [
-     { $push: { Hobbies:"Reading" } }
-   ]
-);         
+  { $push: { Hobbies:"Reading" } }
+);
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
 `````
 
 데이터를 수정 결과를 확인 합니다. (Hobby에 Reading이 추가되어 있음)
