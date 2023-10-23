@@ -238,8 +238,9 @@ Mongosh을 이용하여 Atlas와 연결하여 데이터를 생성 합니다.
 
 먼저 데이터베이스를 선택하여야 합니다.
 ````
-use hanson
-switched to db hanson
+Atlas atlas-gamf6g-shard-0 [primary] MMT> use handson
+switched to db handson
+Atlas atlas-gamf6g-shard-0 [primary] handson>
 ````
 
 다음 데이터 베이스 명령으로 데이터를 생성 합니다.
@@ -266,8 +267,9 @@ Mongosh을 이용하여 Atlas와 연결하여 데이터를 조회 합니다.
 
 먼저 데이터베이스를 선택하여야 합니다. (이미 해당 데이터베이스를 사용 하고 있으면 생략 합니다)
 ````
-use hanson
-switched to db hanson
+Atlas atlas-gamf6g-shard-0 [primary] MMT> use handson
+switched to db handson
+Atlas atlas-gamf6g-shard-0 [primary] handson>
 ````
 
 데이터를 조회 합니다
@@ -300,19 +302,19 @@ Mongosh을 이용하여 Atlas와 연결하여 데이터를 업데이트 합니�
 
 먼저 데이터베이스를 선택하여야 합니다. (이미 해당 데이터베이스를 사용 하고 있으면 생략 합니다)
 ````
-Atlas atlas-t0pzlo-shard-0 [primary] myFirstDatabase> use samsungheavy
-switched to db samsungheavy
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy>
+Atlas atlas-gamf6g-shard-0 [primary] MMT> use handson
+switched to db handson
+Atlas atlas-gamf6g-shard-0 [primary] handson>
 ````
 
 수정할 데이터를 ssn을 입력 하여 줍니다.
 수정 대상 데이터의 ssn 및 수정할 데이터 항목을 확인 수정 하여 줍니다.
 `````
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> let query = {"ssn":"123-456-0001"}
+let query = {"ssn":"123-456-0001"}
 
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> let updatedata = { $set: { email: "gildong@email.com" } }
+let updatedata = { $set: { email: "gildong@email.com" } }
 
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> db.handson.updateOne(query,updatedata)
+db.handson.updateOne(query,updatedata)
 {
   acknowledged: true,
   insertedId: null,
@@ -325,7 +327,7 @@ Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> db.handson.updateOne(query,up
 
 데이터를 수정 결과를 확인 합니다. (이메일 주소가 수정 된 것을 확인 합니다)
 ````
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> db.handson.find({"ssn":"123-456-0001"})
+db.handson.find({"ssn":"123-456-0001"})
 [
   {
     _id: ObjectId("64454591813babb209a83f4d"),
