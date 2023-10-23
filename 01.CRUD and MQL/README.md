@@ -310,18 +310,12 @@ Atlas atlas-gamf6g-shard-0 [primary] handson>
 수정할 데이터를 ssn을 입력 하여 줍니다.
 수정 대상 데이터의 ssn 및 수정할 데이터 항목을 확인 수정 하여 줍니다.
 `````
-let query = {"ssn":"123-456-0001"}
-
-let updatedata = { $set: { email: "gildong@email.com" } }
-
-db.handson.updateOne(query,updatedata)
-{
-  acknowledged: true,
-  insertedId: null,
-  matchedCount: 1,
-  modifiedCount: 1,
-  upsertedCount: 0
-}
+db.users.updateOne(
+  {"ssn":"123-456-0001"},
+   [
+      { $set: { email: "gildong@email.com" } }
+   ]
+)
       
 `````
 
