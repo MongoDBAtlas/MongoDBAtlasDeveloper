@@ -12,7 +12,7 @@ async function run() {
       const query = <<query>>;
       const updatedata = <<query>>;
 
-      const result = await userCollection.updateOne(query,updatedata});
+      const result = await userCollection.updateOne(query,updatedata);
       
       console.log(
         `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
