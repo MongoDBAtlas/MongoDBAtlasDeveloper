@@ -139,14 +139,6 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 `````
       const query = {"ssn":"123-456-0001"};
       const updatedata ={$set:{email:"gildong@email.com"}};
-
-{
-  acknowledged: true,
-  insertedId: null,
-  matchedCount: 1,
-  modifiedCount: 1,
-  upsertedCount: 0
-}
 `````
 
 데이터를 수정 합니다
@@ -324,7 +316,15 @@ db.user.updateOne(
    [
       { $set: { email: "gildong@email.com" } }
    ]
-);      
+);
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}      
 `````
 
 데이터를 수정 결과를 확인 합니다. (이메일 주소가 수정 된 것을 확인 합니다)
