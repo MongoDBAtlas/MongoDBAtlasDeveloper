@@ -139,7 +139,6 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 `````
       const query = {"ssn":"123-456-0001"};
       const updatedata ={$set:{email:"gildong@email.com"}};
-      
 `````
 
 데이터를 수정 합니다
@@ -160,11 +159,8 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 수정할 데이터를 ssn을 입력 하여 줍니다.
 수정 대상 데이터의 ssn 및 Hobby 항목을 추가 하여 줍니다. (취미로 Reading 추가 하기)
 `````
-
       const query = {"ssn":"123-456-0001"};
-      const updatedata ={$push:{Hobbies:"Reading"}};
-
-         
+      const updatedata ={$push:{Hobbies:"Reading"}};     
 `````
 
 데이터를 수정 합니다
@@ -187,11 +183,9 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 삭제할 데이터를 수정 하여 줍니다.
 삭제할 데이터의 ssn 및 입력 하여줍니다.
 `````
-
 const qeury = {"ssn":"123-456-0001"};
 
       const result = await userCollection.deleteOne(qeury);
-
 `````
 
 데이터를 삭제 합니다
