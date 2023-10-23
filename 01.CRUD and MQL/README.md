@@ -980,11 +980,11 @@ db.sales.aggregate(
          {
            _id: { day: { $dayOfYear: "$date"}, year: { $year: "$date" } },
            itemsSold: { $addToSet: "$item" },
-           total_price: {$sum: "$price"}
+           total: {$sum: "$quantity"}
          }
      }
    ]
-)
+);
 
 {
   _id: {
@@ -1032,7 +1032,7 @@ db.artists.insertMany([
   { "_id" : 6, "last_name" : "Munch", "first_name" : "Edvard", "year_born" : 1863, "year_died" : 1944, "nationality" : "Norway" },
   { "_id" : 7, "last_name" : "Redon", "first_name" : "Odilon", "year_born" : 1840, "year_died" : 1916, "nationality" : "France" },
   { "_id" : 8, "last_name" : "Diriks", "first_name" : "Edvard", "year_born" : 1855, "year_died" : 1930, "nationality" : "Norway" }
-])
+]);
 ````
 
 태어난 년도를 기준으로 하여 집계를 위해서 bucket을 이용하여 groupBy 항목으로 year_born을 하여 줍니다. 태어난 년도의 집계는 10년을 기준으로 category화는 boundaries레 작성 기준을 작성하여 줍니다. 
@@ -1056,7 +1056,7 @@ db.artists.aggregate( [
       }
     }
   }
-] )
+] );
 
 
 {
@@ -1129,7 +1129,7 @@ db.clothing.insertMany([
   { "_id" : 3, "item" : "Hat", "sizes": "M" },
   { "_id" : 4, "item" : "Gloves" },
   { "_id" : 5, "item" : "Scarf", "sizes" : null }
-])
+]);
 ````
 배열로 되어 있는 값을 하나의 문서로 만들어 주기 위해 unwind를 사용합니다. 기본적으로 지정된 array (size)에 값이 없는 경우 연산에서 제외 합니다. 이를 포함하도록 하는 옵션은 preserveAndEmptyArrays입니다.
 
@@ -1138,7 +1138,7 @@ db.clothing.insertMany([
 
 db.clothing.aggregate( [
    { $unwind: { path: "$sizes", preserveNullAndEmptyArrays: true } }
-] )
+] );
 
 {
   _id: 1,
@@ -1195,7 +1195,7 @@ db.listingsAndReviews.aggregate( [
 summary:1, address:1, 
 price:1, distance:1}
 }
-] )
+] );
 
 {
   _id: '18426634',
