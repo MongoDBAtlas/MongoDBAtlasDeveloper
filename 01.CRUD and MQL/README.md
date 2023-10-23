@@ -238,15 +238,15 @@ Mongosh을 이용하여 Atlas와 연결하여 데이터를 생성 합니다.
 
 먼저 데이터베이스를 선택하여야 합니다.
 ````
-Atlas atlas-t0pzlo-shard-0 [primary] myFirstDatabase> use samsungheavy
-switched to db samsungheavy
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy>
+use hanson
+switched to db hanson
 ````
 
-입력할 데이터를 생성하여 줍니다. (변수로 newUser를 만들어 줍니다)
+다음 데이터 베이스 명령으로 데이터를 생성 합니다.
 
 ````
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> let newUser=  {
+db.users.insert(
+  {
         ssn:"123-456-0001", 
         email:"user@email.com", 
         name:"Gildong Hong", 
@@ -254,18 +254,8 @@ Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> let newUser=  {
         Hobbies:["Martial arts"],
         Addresses:[{"Address Name":"Work","Street":"431, Teheran-ro GangNam-gu ","City":"Seoul", "Zip":"06159"}], 
         Phones:[{"type":"mobile","number":"010-5555-1234"}]
-      };
-````
-
-다음 데이터 베이스 명령으로 데이터를 생성 합니다.
-
-````
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> db.handson.insertOne(newUser)
-{
-  acknowledged: true,
-  insertedId: ObjectId("64454591813babb209a83f4d")
-}
-
+  }
+);
 ````
 Atlas Console 에서 데이터 생성 여부를 확인 합니다.
 
@@ -276,14 +266,13 @@ Mongosh을 이용하여 Atlas와 연결하여 데이터를 조회 합니다.
 
 먼저 데이터베이스를 선택하여야 합니다. (이미 해당 데이터베이스를 사용 하고 있으면 생략 합니다)
 ````
-Atlas atlas-t0pzlo-shard-0 [primary] myFirstDatabase> use samsungheavy
-switched to db samsungheavy
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy>
+use hanson
+switched to db hanson
 ````
 
 데이터를 조회 합니다
 ````
-Atlas atlas-t0pzlo-shard-0 [primary] samsungheavy> db.handson.find({ssn:"123-456-0001"})
+db.handson.find({ssn:"123-456-0001"})
 [
   {
     _id: ObjectId("64454591813babb209a83f4d"),
