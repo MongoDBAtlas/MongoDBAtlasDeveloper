@@ -139,6 +139,14 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 `````
       const query = {"ssn":"123-456-0001"};
       const updatedata ={$set:{email:"gildong@email.com"}};
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
 `````
 
 데이터를 수정 합니다
