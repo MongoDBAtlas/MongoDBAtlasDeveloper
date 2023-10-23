@@ -23,8 +23,8 @@
 ### CRUD
 
 Nodejs로 Atlas 에 접속 하고 MongoDB Query 를 이용하여 데이터를 생성, 조회, 삭제를 테스트 합니다. <br>
-코드는 application 폴더에 있으며 실행을 위해서는 NodeJS를 설치하고 테스트를 위해 관련 패키지를 설치 하여 줍니다.
-**아래 명령어는 반드시 application 폴더에서 실행하셔야 합니다.**
+코드는 application 폴더에 있으며 실행을 위해서는 NodeJS를 설치하고 테스트를 위해 관련 패키지를 설치 하여 줍니다.<br>
+***아래 명령어는 반드시 application 폴더에서 실행하셔야 합니다.***
 ````
 % npm install
 
