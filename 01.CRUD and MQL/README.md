@@ -184,8 +184,6 @@ const uri =mongodb+srv://atlas-account:<password>@cluster0.****.mongodb.net/myFi
 삭제할 데이터의 ssn 및 입력 하여줍니다.
 `````
 const qeury = {"ssn":"123-456-0001"};
-
-      const result = await userCollection.deleteOne(qeury);
 `````
 
 데이터를 삭제 합니다
