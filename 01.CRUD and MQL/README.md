@@ -868,6 +868,23 @@ Lookup
 
 
 ````
+db.users.aggregate(
+[
+  {
+    $match: {
+      name: "Mercedes Tyler",
+    },
+  },
+  {
+    $lookup: {
+      from: "comments",
+      localField: "name",
+      foreignField: "name",
+      as: "Comments",
+    },
+  },
+]);
+
 {
   _id: ObjectId("59b99dedcfa9a34dcd78862d"),
   name: 'Mercedes Tyler',
