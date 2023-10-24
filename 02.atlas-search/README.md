@@ -8,6 +8,7 @@
 ### [&rarr; Search in Aggregate](#Aggregate)
 ### [&rarr; Vector Search](#Vector)
 
+실습은 Python Application을 이용하여 테스트 할 수 있으며 익숙하지 않은 경우 Aggregate를 이용하여 실습 할 수 있습니다. 
 <br>
 
 ### Index
