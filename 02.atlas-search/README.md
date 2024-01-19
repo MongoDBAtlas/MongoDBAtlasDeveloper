@@ -505,6 +505,7 @@ Atlas atlas-txdmjn-shard-0 [primary] sample_mflix> db.movies.aggregate([search,p
 path 가 "title"로 입력한 단어를 검색 하며 fuzzy 설정에 따라 1개의 오타를 허용 하여 검색 합니다.     
 
 
+
 ### Vector
 영화에 대해 단어를 이용한 검색이 아닌 문장으로 의미를 작성하여 검색을 진행 합니다. embedded_movies 컬렉션에 사전에 OpenAI 의 "ada-002-text"를 이용하여 vector data를 생성 한 것입니다.
 
@@ -515,34 +516,34 @@ sample_mflix.embedded_movies 컬렉션의 데이터로 plot_embedding 필드에 
 해당 필드에 인덱스를 생성 하여 줍니다. Vector 의 차원은 1536이며 비교 연산은 euclidean을 사용 합니다.  
 Atlas console에서 인덱스를 생성 하여 줍니다. 인덱스는 UI를 통해서 생성이 지원되지 않음으로 JSON을 이용한 생성을 선택 합니다.   
 
+<img src="/02.atlas-search/image/images40.png" width="50%" height="50%">
+
 
 인덱스 이름을 vector_index로 지정 하고 plot_embedding 필드에 인덱스를 생성하며 type은 knnVector로 지정하고 차원 정보는 1536, 유사도는 euclidean을 입력 하여 줍니다. 장르 정보를 지정하여 검색 하기 위해 genres도 추가 하여 줍니다.     
 
 `````
 {
-  "mappings": {
-    "dynamic": true,
-    "fields": {
-      "plot_embedding": {
-        "type": "knnVector",
-        "dimensions": 1536,
-        "similarity": "euclidean"
-      },
-      "genres": {
-        "type": "token",
-        "normalizer": "lowercase"
-      }
+  "fields": [
+    {
+      "type": "vector",
+      "path": "plot_embedding",
+      "numDimensions": 1536,
+      "similarity": "euclidean"
+    },
+    {
+      "path": "genres",
+      "type": "filter"
     }
-  }
+  ]
 }
 `````
 
 인덱스 생성 까지는 1-2분 정도가 소요되며 생성 완료는 search index 페이지에서 확인 가능 합니다.    
 
-<img src="/02.atlas-search/image/images31.png" width="70%" height="70%">
+<img src="/02.atlas-search/image/images41.png" width="70%" height="70%">
 
 
-검색을 위해서 openAI (https://openai.com/)에 무료 회원 가입 후 회원 정보 페이지에서 API 사용을 위한 API key를 생성 합니다.   
+검색을 위해서 openAI (https://openai.com/ )에 무료 회원 가입 후 회원 정보 페이지에서 API 사용을 위한 API key를 생성 합니다.   
 
 
 <img src="/02.atlas-search/image/images32.png" width="70%" height="70%">
@@ -589,17 +590,10 @@ curl --location 'https://api.openai.com/v1/embeddings' \
 }
 `````
 
-embedding 부분을 복사 하여 Query에 넣어주면 검색이 가능 합니다.
-다음은 Vector를 이용한 검색 Query입니다.   
+호출에 대한 결과는 vector.json에 저장 하고 있음으로 이를 사용 할 수 있습니다.   
 `````
-[primary] sample_mflix> let vector = [
-                -0.0028920018,
-                -0.027676977,
-                0.007235899,
-                ...
-                0.00018032902,
-                -0.026289087
-            ]
+[primary] sample_mflix> const vectorjson = require('./vector.json')
+[primary] sample_mflix> let vector = vectorjson.data[0].embedding
 
 [primary] sample_mflix> db.embedded_movies.aggregate([ { "$vectorSearch": { "index": "vector_index", "path": "plot_embedding", "queryVector": vector, "numCandidates": 200, "limit": 10 } }, { "$project": { "_id": 0, "title": 1, "genres": 1, "plot": 1, "released": 1, "score": { $meta: "vectorSearchScore" } } }] )
 [
@@ -678,4 +672,25 @@ embedding 부분을 복사 하여 Query에 넣어주면 검색이 가능 합니�
 `````
 
 OpenAI의 API 호출 시 원한는 값을 Input에 넣어 Vector 값을 구해서 결과 검색이 가능합니다.   
-OpenAI이 계정이 없는 경우 openAI.txt 파일에 전체 값을 넣었으니 활용하여 검색이 가능 합니다.  
+
+
+`````
+[primary] sample_mflix> let vector;
+
+[primary] sample_mflix> var myHeaders = new Headers();
+
+[primary] sample_mflix> myHeaders.append("Content-Type", "application/json");
+
+[primary] sample_mflix> myHeaders.append("Authorization", "Bearer sk-bPm*****");
+
+[primary] sample_mflix> var raw = JSON.stringify({ "input": "<<Text of what you want to do vector search>> ", "model": "text-embedding-ada-002" });
+
+[primary] sample_mflix> var requestOptions = { method: 'POST', headers: myHeaders, body: raw, redirect: 'follow' }; 
+
+[primary] sample_mflix> fetch("https://api.openai.com/v1/embeddings", requestOptions).then(response => response.text()).then(result => vector=result.data[0].embedding).catch(error => console.log('error', error));
+
+
+[primary] sample_mflix> db.embedded_movies.aggregate([ { "$vectorSearch": { "index": "vector_index", "path": "plot_embedding", "queryVector": vector, "numCandidates": 200, "limit": 10 } }, { "$project": { "_id": 0, "title": 1, "genres": 1, "plot": 1, "released": 1, "score": { $meta: "vectorSearchScore" } } }] )
+
+
+`````
